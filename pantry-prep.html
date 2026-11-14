@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PantryPrep</title>
+<style>
+:root {
+  --bg: #fafaf7;
+  --fg: #1d2420;
+  --mut: #66706a;
+  --card: #fff;
+  --bd: #d9ddd6;
+  --ac: #2f7d4f;
+  --acf: #fff;
+  --warn: #b4531a;
+  --sel: #e8f3ec;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px)
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141815;
+    --fg: #e8ece9;
+    --mut: #9aa59e;
+    --card: #1d231f;
+    --bd: #333c36;
+    --ac: #5fbf86;
+    --acf: #0e1a12;
+    --warn: #e89a62;
+    --sel: #243229;
+    color-scheme: dark
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141815;
+  --fg: #e8ece9;
+  --mut: #9aa59e;
+  --card: #1d231f;
+  --bd: #333c36;
+  --ac: #5fbf86;
+  --acf: #0e1a12;
+  --warn: #e89a62;
+  --sel: #243229;
+  color-scheme: dark
+}
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px)
+}
+* {
+  box-sizing: border-box
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif
+}
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--bd);
+  background: var(--card)
+}
+.logo {
+  font-weight: 700;
+  font-size: 20px
+}
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px
+}
+nav button {
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--mut);
+  padding: 6px 10px;
+  font: inherit;
+  cursor: pointer
+}
+nav button.on {
+  color: var(--fg);
+  border-color: var(--ac);
+  font-weight: 600
+}
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px
+}
+h2 {
+  margin: 0 0 4px;
+  font-size: 22px
+}
+h3 {
+  margin: 0 0 8px;
+  font-size: 16px
+}
+.sub {
+  color: var(--mut);
+  font-size: 14px;
+  margin: 0 0 14px
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px
+}
+@media (max-width: 720px) {
+  .grid {
+    grid-template-columns: 1fr
+  }
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  padding: 14px
+}
+button, .btn, select, input[type=text] {
+  font: inherit;
+  color: var(--fg)
+}
+.btn, button.b {
+  background: var(--card);
+  border: 1px solid var(--fg);
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  display: inline-block
+}
+.pri {
+  background: var(--ac);
+  border-color: var(--ac);
+  color: var(--acf);
+  font-weight: 600
+}
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed
+}
+input[type=text], select {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 8px;
+  padding: 8px 10px;
+  min-width: 0
+}
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap
+}
+.row > input[type=text] {
+  flex: 1
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--bd)
+}
+.item:last-child {
+  border: 0
+}
+.item .n {
+  flex: 1
+}
+.item small {
+  color: var(--mut)
+}
+.item.sel {
+  background: var(--sel)
+}
+.ic {
+  background: none;
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  padding: 2px 8px;
+  cursor: pointer
+}
+.chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 6px 0 12px
+}
+.chip {
+  border: 1px solid var(--bd);
+  border-radius: 99px;
+  padding: 2px 12px;
+  font-size: 14px;
+  background: var(--card);
+  color: var(--fg);
+  cursor: default
+}
+button.chip {
+  cursor: pointer
+}
+.prev {
+  position: relative;
+  border: 1px dashed var(--bd);
+  border-radius: 10px;
+  min-height: 200px;
+  display: grid;
+  place-items: center;
+  color: var(--mut);
+  overflow: hidden;
+  margin: 12px 0
+}
+.prev img {
+  width: 100%;
+  display: block
+}
+.box {
+  position: absolute;
+  border: 2px dashed var(--ac);
+  font-size: 11px
+}
+.box span {
+  background: var(--ac);
+  color: var(--acf);
+  padding: 0 4px
+}
+.bar {
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  background: var(--sel);
+  border: 1px solid var(--ac)
+}
+.bar.err {
+  border-color: var(--warn);
+  background: var(--card);
+  color: var(--warn)
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+  margin-top: 14px
+}
+.empty {
+  text-align: center;
+  color: var(--mut);
+  padding: 28px 10px
+}
+.low {
+  color: var(--warn);
+  font-size: 12px
+}
+.plan {
+  display: grid;
+  grid-template-columns: 64px repeat(7, minmax(92px, 1fr));
+  gap: 6px;
+  min-width: 760px
+}
+.slot {
+  min-height: 62px;
+  border: 1px dashed var(--bd);
+  border-radius: 8px;
+  padding: 4px 6px;
+  font-size: 13px;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  color: var(--fg)
+}
+.slot.f {
+  border-style: solid;
+  background: var(--card)
+}
+.slot.rv {
+  border-color: var(--warn)
+}
+.wrap {
+  overflow-x: auto
+}
+.spin {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--bd);
+  border-top-color: var(--ac);
+  border-radius: 50%;
+  animation: s .8s linear infinite;
+  vertical-align: -2px;
+  margin-right: 6px
+}
+@keyframes s {
+  to {
+    transform: rotate(360deg)
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <span class="logo">🥕 PantryPrep</span>
+  <nav id="nav"></nav>
+</header>
+<main id="app"></main>
+<script>
+/* ---- Data: sample recipes stand in for Spoonacular (id, title, minutes|null, ingredients, steps) ---- */
+const R = [
+  [1, 'Tomato Rice', 20, [['tomato', '2 medium'], ['onion', '1'], ['rice', '1 cup'], ['salt', '1 tsp'], ['oil', '1 tbsp']], 'Cook the rice. Sauté onion and tomato in oil, season, then fold in the rice.'],
+  [2, 'Stuffed Peppers', 25, [['bell pepper', '4'], ['rice', '1 cup'], ['onion', '1'], ['tomato', '2']], 'Cook the rice. Sauté onion and tomato. Fill the peppers and bake.'],
+  [3, 'Onion Soup', 40, [['onion', '4'], ['butter', '2 tbsp'], ['garlic', '2 cloves'], ['salt', '1 tsp']], 'Caramelize onions in butter with garlic, add hot water and salt, simmer.'],
+  [4, 'Veggie Wrap', 10, [['tortilla', '2'], ['bell pepper', '1'], ['tomato', '1'], ['cheese', '1/2 cup']], 'Slice the vegetables, layer with cheese in the tortillas, and roll.'],
+  [5, 'Garlic Fried Rice', 15, [['rice', '2 cups'], ['egg', '2'], ['garlic', '3 cloves'], ['oil', '1 tbsp'], ['soy sauce', '2 tbsp']], 'Fry garlic, scramble the eggs, add rice and soy sauce.'],
+  [6, 'Tomato Egg Scramble', 10, [['egg', '3'], ['tomato', '2'], ['salt', '1/2 tsp'], ['oil', '1 tbsp']], 'Cook the tomato until soft, add beaten eggs and stir until set.'],
+  [7, 'Potato Pepper Hash', 30, [['potato', '3'], ['onion', '1'], ['bell pepper', '1'], ['oil', '2 tbsp'], ['salt', '1 tsp']], 'Dice and pan-fry everything until crisp.'],
+  [8, 'Caprese Toast', 10, [['bread', '2 slices'], ['tomato', '1'], ['cheese', '1/4 cup'], ['oil', '1 tsp']], 'Toast the bread, top with tomato and cheese, finish with oil.'],
+  [9, 'Cheesy Omelette', 10, [['egg', '3'], ['cheese', '1/3 cup'], ['butter', '1 tbsp']], 'Melt the butter, add eggs, fold over the cheese.'],
+  [10, 'Carrot Rice Pilaf', 35, [['rice', '1 cup'], ['carrot', '2'], ['onion', '1'], ['butter', '1 tbsp'], ['salt', '1 tsp']], 'Sauté onion and carrot in butter, add rice and water, simmer covered.'],
+  [11, 'Roasted Veg Tray', 35, [['potato', '2'], ['carrot', '2'], ['bell pepper', '1'], ['onion', '1'], ['oil', '2 tbsp'], ['salt', '1 tsp']], 'Chop, toss in oil and salt, and roast at 425°F.'],
+  [12, 'Pasta Pomodoro', 25, [['pasta', '200 g'], ['tomato', '4'], ['garlic', '2 cloves'], ['oil', '2 tbsp'], ['salt', '1 tsp']], 'Boil the pasta. Simmer garlic and tomato in oil, then toss together.'],
+  [13, 'Quesadilla', 12, [['tortilla', '2'], ['cheese', '1 cup'], ['bell pepper', '1']], 'Fill the tortilla with cheese and pepper and griddle until golden.'],
+  [14, 'Banana Pancakes', null, [['banana', '2'], ['egg', '2'], ['flour', '1/2 cup']], 'Mash the banana, mix with egg and flour, and fry small rounds.'],
+  [15, 'Spinach Egg Bake', 30, [['egg', '4'], ['spinach', '2 cups'], ['cheese', '1/2 cup'], ['onion', '1']], 'Mix everything, pour into a dish, and bake until set.']
+];
+const VOCAB = new Set(R.flatMap(r => r[3].map(i => i[0])));
+const ALIAS = {
+  tomatoes: 'tomato',
+  onions: 'onion',
+  'bell peppers': 'bell pepper',
+  peppers: 'bell pepper',
+  pepper: 'bell pepper',
+  eggs: 'egg',
+  potatoes: 'potato',
+  carrots: 'carrot',
+  bananas: 'banana',
+  tortillas: 'tortilla',
+  'garlic clove': 'garlic',
+  'garlic cloves': 'garlic'
+};
+const STAPLES = ['salt', 'oil', 'butter', 'garlic', 'flour', 'soy sauce'];
+const DET_POOL = ['tomato', 'onion', 'bell pepper', 'egg', 'carrot', 'potato', 'banana', 'rice'];
+const norm = s => {
+  s = String(s).toLowerCase().replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim();
+  if (ALIAS[s]) return ALIAS[s];
+  if (VOCAB.has(s)) return s;
+  for (const k of [1, 2])
+    if (s.length > k + 2 && VOCAB.has(s.slice(0, -k))) return s.slice(0, -k);
+  return s
+};
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const pd = s => {
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d)
+};
+const mondayOf = d => {
+  d = new Date(d);
+  d.setDate(d.getDate() - (d.getDay() + 6) % 7);
+  return iso(d)
+};
+const fmt = (d, o) => d.toLocaleDateString('en-US', o);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ---- AppState ---- */
+const S = {
+  tab: 'scan', pantry: [], draft: [], sel: new Set(), file: null, imgUrl: null, det: null, editing: null, loading: false, msg: null, err: null,
+  maxTime: '', results: null, openId: null, plans: {}, planDraft: {}, week: mondayOf(new Date()), placing: null, picker: null, prompt: null
+};
+function persist() {
+  try {
+    localStorage.setItem('pp1', JSON.stringify({pantry: S.pantry, plans: S.plans}))
+  } catch (e) {}
+}
+function restore() {
+  try {
+    const d = JSON.parse(localStorage.getItem('pp1') || 'null');
+    if (d) {
+      S.pantry = d.pantry || [];
+      S.plans = d.plans || {}
+    }
+  } catch (e) {}
+  S.draft = S.pantry.map(x => ({...x}));
+  S.planDraft = {...(S.plans[S.week] || {})}
+}
+const names = a => a.map(x => x.n).sort().join('|');
+const pDirty = () => names(S.draft) !== names(S.pantry);
+const planDirty = () => JSON.stringify(Object.entries(S.planDraft).sort()) !== JSON.stringify(Object.entries(S.plans[S.week] || {}).sort());
+const pset = () => new Set(S.pantry.map(x => x.n));
+const strict = (r, set) => r[3].every(i => set.has(i[0]));
+const byId = id => R.find(r => r[0] == id);
+
+/* ---- ApiClient (mock): the real build calls Cloud Functions here ---- */
+const ApiClient = {
+  async detect() {
+    await sleep(900);
+    const pool = [...DET_POOL].sort(() => Math.random() - .5).slice(0, 4);
+    return pool.map((n, i) => ({
+      n,
+      c: i === 3 ? 0.42 : +(0.95 - i * 0.07).toFixed(2),
+      b: [8 + Math.random() * 50, 8 + Math.random() * 45, 22, 26]
+    }))
+  },
+  async search(set, max) {
+    await sleep(500);
+    return R.filter(r => strict(r, set) && (!max || (r[2] != null && r[2] <= max)))
+  }
+};
+
+/* ---- Views ---- */
+const V = {
+  scan() {
+    const d = S.det;
+    return `<h2>Scan your groceries</h2><p class="sub">Upload a JPG or PNG up to 10 MB. Nothing is saved until you confirm.</p>
+  <div class="grid"><div><label class="btn">Choose photo / take photo<input id="file" type="file" accept="image/jpeg,image/png" capture="environment" hidden></label>
+  <div class="prev">${S.imgUrl
+      ? `<img src="${S.imgUrl}" alt="Grocery photo preview">${(d || []).map(x => `<div class="box" style="left:${x.b[0]}%;top:${x.b[1]}%;width:${x.b[2]}%;height:${x.b[3]}%"><span>${esc(x.n)} ${x.c}</span></div>`).join('')}`
+      : 'Photo preview appears here'}</div>
+  <button class="b pri btn" data-a="detect" ${!S.imgUrl || S.loading ? 'disabled' : ''}>${S.loading ? '<span class="spin"></span>Detecting…' : 'Detect ingredients'}</button>
+  <p class="sub" style="margin-top:8px">Prototype note: detection is simulated here. The full build calls the fine-tuned YOLO model on the backend.</p></div>
+  <div class="card"><h3>Detected ingredients</h3>${d === null
+      ? '<div class="empty">Choose a photo and select Detect ingredients.</div>'
+      : (d.length
+        ? d.map((x, i) => `<div class="item"><span class="n">${S.editing === i
+            ? `<input type="text" id="ed" value="${esc(x.n)}">`
+            : `<b>${esc(x.n)}</b> <small>${Math.round(x.c * 100)}% confident</small>${x.c < .5 ? ' <span class="low">suggestion, please verify</span>' : ''}`}</span>
+    ${S.editing === i
+            ? `<button class="ic" data-a="savedet" data-i="${i}" aria-label="Save name">✓</button>`
+            : `<button class="ic" data-a="editdet" data-i="${i}" aria-label="Edit name">✎</button>`}<button class="ic" data-a="deldet" data-i="${i}" aria-label="Remove">×</button></div>`).join('')
+        : '<div class="empty">No supported groceries found. Retry with another photo or add ingredients below.</div>')}
+   <div class="row" style="margin:12px 0"><input type="text" id="miss" placeholder="Ingredient the scanner missed…"><button class="b" data-a="adddet">Add missing ingredient</button></div>
+   <button class="b pri btn" style="width:100%" data-a="confirm" ${d && d.length ? '' : 'disabled'}>Confirm and save pantry</button></div></div>`
+  },
+
+  pantry() {
+    const st = S.draft.length === 0;
+    return `<h2>My pantry <small class="sub">(${S.draft.length} ingredient${S.draft.length == 1 ? '' : 's'})</small></h2>
+  <div class="row" style="justify-content:space-between;margin-bottom:12px"><span class="sub" style="margin:0">Staples such as salt and oil must be added explicitly.</span><button class="b pri btn" data-a="find">Find recipes →</button></div>
+  <div class="grid"><div><input type="text" id="psearch" placeholder="Search pantry…" style="width:100%;margin-bottom:8px"><div class="card" id="plist">${V.plist('')}</div>
+  <button class="b" style="margin-top:10px" data-a="prem" ${S.sel.size ? '' : 'disabled'}>Remove selected ingredient</button></div>
+  <div><div class="card"><h3>Add an ingredient</h3><div class="row"><input type="text" id="newing" placeholder="e.g. Garlic" list="vocab"><button class="b" data-a="padd">Add ingredient</button></div>
+  <datalist id="vocab">${[...VOCAB].map(v => `<option value="${v}">`).join('')}</datalist>
+  <div class="chips">${STAPLES.map(s => `<button class="chip" data-a="quick" data-n="${s}">+ ${s}</button>`).join('')}</div>
+  <p class="sub" style="margin:0">Empty names are rejected and duplicates are merged.</p></div>
+  <div class="card" style="margin-top:14px"><p class="sub">${pDirty() ? 'You have unsaved changes.' : 'All changes saved.'}</p><button class="b pri btn" style="width:100%" data-a="psave" ${pDirty() ? '' : 'disabled'}>Save changes</button></div></div></div>
+  ${st ? '<div class="empty">Your pantry is empty. <button class="b" data-a="go" data-t="scan">Scan groceries</button> or add ingredients manually.</div>' : ''}`
+  },
+
+  plist(q) {
+    q = q.toLowerCase();
+    const l = S.draft.filter(x => x.n.includes(q));
+    return l.length
+      ? l.map(x => `<label class="item ${S.sel.has(x.n) ? 'sel' : ''}"><input type="checkbox" data-a="tog" data-n="${esc(x.n)}" ${S.sel.has(x.n) ? 'checked' : ''}><span class="n"><b>${esc(x.n)}</b></span><small>${x.src === 'photo' ? 'from photo' : 'added manually'} · ${esc(x.d)}</small></label>`).join('')
+      : '<div class="empty">No matching ingredients.</div>'
+  },
+
+  recipes() {
+    if (S.openId) return V.detail(byId(S.openId));
+    const res = S.results;
+    return `<h2>Find recipes</h2><p class="sub">Using your confirmed pantry:</p><div class="chips">${S.pantry.length
+      ? S.pantry.map(x => `<span class="chip">${esc(x.n)}</span>`).join('')
+      : '<span class="sub">No ingredients yet.</span>'}</div>
+  <div class="row"><select id="maxt" aria-label="Maximum cooking time">${[['', 'Any cooking time'], [15, 'Max 15 min'], [30, 'Max 30 min'], [45, 'Max 45 min'], [60, 'Max 60 min']].map(o => `<option value="${o[0]}" ${String(S.maxTime) === String(o[0]) ? 'selected' : ''}>${o[1]}</option>`).join('')}</select>
+  <button class="b pri btn" data-a="search" ${S.loading || !S.pantry.length ? 'disabled' : ''}>${S.loading ? '<span class="spin"></span>Searching…' : 'Search recipes'}</button></div>
+  ${!S.pantry.length ? '<div class="empty">Add ingredients first. <button class="b" data-a="go" data-t="scan">Scan groceries</button> <button class="b" data-a="go" data-t="pantry">Edit pantry</button></div>' : ''}
+  ${res && !res.length ? '<div class="empty">No exact matches. Every ingredient a recipe needs must be in your pantry, and recipes needing extras are never shown as matches.<br><br><button class="b" data-a="go" data-t="pantry">Edit pantry</button></div>' : ''}
+  <div class="cards">${(res || []).map(r => `<div class="card"><b>${r[1]}</b><div class="sub" style="margin:4px 0 10px">${r[2] != null ? r[2] + ' min' : 'Time not listed'} · all ingredients in pantry</div><button class="b" data-a="open" data-id="${r[0]}">View recipe</button></div>`).join('')}</div>`
+  },
+
+  detail(r) {
+    return `<button class="b" data-a="back">← Back to results</button><div class="card" style="margin-top:12px"><h2>${r[1]}</h2><p class="sub">Cooking time: ${r[2] != null ? r[2] + ' min' : 'not listed'} · Source: sample recipe data</p>
+  <h3>Ingredients</h3><ul>${r[3].map(i => `<li>${i[1]} ${i[0]}</li>`).join('')}</ul><p class="sub">A match means each ingredient is in your pantry. Compare your amounts with the recipe.</p>
+  <h3>Instructions</h3><p>${r[4]}</p><button class="b pri btn" data-a="addplan" data-id="${r[0]}">Add to meal plan</button></div>`
+  },
+
+  plan() {
+    const w = pd(S.week),
+      days = [...Array(7)].map((_, i) => {
+        const d = new Date(w);
+        d.setDate(d.getDate() + i);
+        return d
+      }),
+      set = pset();
+    const cell = (d, m) => {
+      const k = iso(d) + '|' + m, id = S.planDraft[k], r = id && byId(id);
+      if (!r) return `<button class="slot" data-a="slot" data-k="${k}">+ Add</button>`;
+      const rv = !strict(r, set);
+      return `<div class="slot f ${rv ? 'rv' : ''}"><b>${r[1]}</b>${rv ? '<div class="low">Review: pantry changed</div>' : ''}<div class="row" style="gap:4px;margin-top:4px"><button class="ic" data-a="repl" data-k="${k}" aria-label="Replace meal">⇄</button><button class="ic" data-a="clr" data-k="${k}" aria-label="Remove meal">×</button></div></div>`
+    };
+    const pk = S.picker, opts = R.filter(r => strict(r, set));
+    return `<h2>Weekly plan</h2>
+  <div class="row" style="margin:8px 0 14px"><button class="b" data-a="week" data-d="-7" aria-label="Previous week">◀</button><b>Week of ${fmt(w, {month: 'short', day: 'numeric', year: 'numeric'})}</b><button class="b" data-a="week" data-d="7" aria-label="Next week">▶</button>
+  <button class="b pri btn" data-a="savep" ${planDirty() ? '' : 'disabled'} style="margin-left:auto">Save weekly plan</button></div>
+  ${S.placing ? `<div class="bar">Choose a day and meal slot for <b>${byId(S.placing)[1]}</b>.</div>` : ''}
+  <div class="wrap"><div class="plan"><div></div>${days.map(d => `<b>${fmt(d, {weekday: 'short'})}</b>`).join('')}
+  <b>Lunch</b>${days.map(d => cell(d, 'lunch')).join('')}<b>Dinner</b>${days.map(d => cell(d, 'dinner')).join('')}</div></div>
+  <p class="sub" style="margin-top:10px">Planning an ingredient across several meals does not reserve or deduct quantities.</p>
+  ${pk ? `<div class="card" style="margin-top:14px"><h3>Choose a recipe · ${fmt(pd(pk.split('|')[0]), {weekday: 'short'})} ${pk.split('|')[1]}</h3>
+   ${opts.length
+      ? opts.map(r => `<div class="item"><span class="n"><b>${r[1]}</b> <small>${r[2] != null ? r[2] + ' min' : 'time not listed'}</small></span><button class="b" data-a="pick" data-id="${r[0]}">Choose</button></div>`).join('')
+      : '<div class="empty">No recipes match your pantry right now. Edit your pantry to add more.</div>'}
+   <button class="b" data-a="pclose" style="margin-top:8px">Cancel</button></div>` : ''}`
+  }
+};
+
+/* ---- AppController ---- */
+function render() {
+  $nav.innerHTML = [['scan', 'Scan groceries'], ['pantry', 'My pantry'], ['recipes', 'Find recipes'], ['plan', 'Weekly plan']]
+    .map(t => `<button data-a="go" data-t="${t[0]}" class="${S.tab === t[0] ? 'on' : ''}">${t[1]}</button>`).join('');
+  const p = S.prompt;
+  $app.innerHTML = (p ? `<div class="bar" role="alert">${p.msg} <span class="row" style="display:inline-flex;margin-left:8px"><button class="b pri btn" data-a="psv">Save</button><button class="b" data-a="pdc">Discard</button><button class="b" data-a="pcl">Cancel</button></span></div>` : '')
+    + (S.msg ? `<div class="bar" role="status">${S.msg}</div>` : '')
+    + (S.err ? `<div class="bar err" role="alert">${S.err}</div>` : '')
+    + V[S.tab]();
+}
+function guard(msg, sv, dc, next) {
+  S.prompt = {msg, sv, dc, next};
+  render()
+}
+function nav(t) {
+  S.tab = t;
+  S.msg = S.err = null;
+  if (t !== 'recipes') S.openId = null;
+  render()
+}
+function loadWeek(w) {
+  S.week = w;
+  S.planDraft = {...(S.plans[w] || {})};
+  S.picker = null;
+  render()
+}
+function mergeInto(list, n, src) {
+  n = norm(n);
+  if (!n) return false;
+  if (!list.some(x => x.n === n)) list.push({n, src, d: fmt(new Date(), {month: 'short', day: 'numeric'})});
+  return true
+}
+const A = {
+  go({t}) {
+    const left = S.tab === 'pantry' && pDirty(), leftP = S.tab === 'plan' && planDirty();
+    if (left) return guard('You have unsaved pantry changes.',
+      () => A.psave(),
+      () => {
+        S.draft = S.pantry.map(x => ({...x}));
+        S.sel.clear()
+      },
+      () => {
+        S.prompt = null;
+        nav(t)
+      });
+    if (leftP) return guard('You have an unsaved meal plan.',
+      () => A.savep(),
+      () => {
+        S.planDraft = {...(S.plans[S.week] || {})}
+      },
+      () => {
+        S.prompt = null;
+        nav(t)
+      });
+    nav(t)
+  },
+  find() {
+    A.go({t: 'recipes'})
+  },
+  async detect() {
+    if (S.loading || !S.file) return;
+    S.loading = true;
+    S.err = null;
+    render();
+    try {
+      S.det = await ApiClient.detect(S.file)
+    } catch (e) {
+      S.err = 'Detection failed. Retry or enter ingredients manually.'
+    }
+    S.loading = false;
+    render()
+  },
+  editdet({i}) {
+    S.editing = +i;
+    render()
+  },
+  savedet({i}) {
+    const v = norm($('#ed').value);
+    if (v) S.det[i].n = v;
+    S.editing = null;
+    render()
+  },
+  deldet({i}) {
+    S.det.splice(i, 1);
+    S.editing = null;
+    render()
+  },
+  adddet() {
+    const v = norm($('#miss').value);
+    if (!v) {
+      S.err = 'Enter an ingredient name first.';
+      return render()
+    }
+    S.err = null;
+    if (!S.det) S.det = [];
+    if (!S.det.some(x => x.n === v)) S.det.push({n: v, c: 1, b: [0, 0, 0, 0]});
+    render()
+  },
+  confirm() {
+    S.det.forEach(x => mergeInto(S.pantry, x.n, 'photo'));
+    S.draft = S.pantry.map(x => ({...x}));
+    persist();
+    S.det = null;
+    S.file = S.imgUrl = null;
+    S.results = null;
+    nav('pantry');
+    S.msg = 'Pantry saved. Duplicate ingredients were merged.';
+    render()
+  },
+  padd() {
+    const el = $('#newing');
+    if (!norm(el.value)) {
+      S.err = 'Ingredient names cannot be empty.';
+      return render()
+    }
+    S.err = null;
+    mergeInto(S.draft, el.value, 'manual');
+    render()
+  },
+  quick({n}) {
+    mergeInto(S.draft, n, 'manual');
+    render()
+  },
+  tog({n}) {
+    S.sel.has(n) ? S.sel.delete(n) : S.sel.add(n);
+    render()
+  },
+  prem() {
+    S.draft = S.draft.filter(x => !S.sel.has(x.n));
+    S.sel.clear();
+    render()
+  },
+  psave() {
+    S.pantry = S.draft.map(x => ({...x}));
+    S.results = null;
+    persist();
+    S.msg = 'Pantry changes saved.';
+    render()
+  },
+  async search() {
+    if (S.loading) return;
+    S.maxTime = $('#maxt').value;
+    S.loading = true;
+    S.err = null;
+    render();
+    try {
+      S.results = await ApiClient.search(pset(), +S.maxTime || 0)
+    } catch (e) {
+      S.err = 'Search failed. Please try again.'
+    }
+    S.loading = false;
+    render()
+  },
+  open({id}) {
+    S.openId = +id;
+    render()
+  },
+  back() {
+    S.openId = null;
+    render()
+  },
+  addplan({id}) {
+    S.placing = +id;
+    S.openId = null;
+    nav('plan')
+  },
+  week({d}) {
+    const w = pd(S.week);
+    w.setDate(w.getDate() + +d);
+    const nw = iso(w);
+    if (planDirty()) return guard('Save changes to this week before switching?',
+      () => A.savep(),
+      () => {},
+      () => {
+        S.prompt = null;
+        loadWeek(nw)
+      });
+    loadWeek(nw)
+  },
+  slot({k}) {
+    if (S.placing) {
+      S.planDraft[k] = S.placing;
+      S.placing = null;
+      render()
+    } else {
+      S.picker = k;
+      render()
+    }
+  },
+  repl({k}) {
+    S.picker = k;
+    render()
+  },
+  clr({k}) {
+    delete S.planDraft[k];
+    render()
+  },
+  pick({id}) {
+    S.planDraft[S.picker] = +id;
+    S.picker = null;
+    render()
+  },
+  pclose() {
+    S.picker = null;
+    render()
+  },
+  savep() {
+    S.plans[S.week] = {...S.planDraft};
+    persist();
+    S.msg = 'Weekly plan saved.';
+    render()
+  },
+  psv() {
+    const p = S.prompt;
+    p.sv();
+    p.next()
+  },
+  pdc() {
+    const p = S.prompt;
+    p.dc();
+    p.next()
+  },
+  pcl() {
+    S.prompt = null;
+    render()
+  }
+};
+const $ = s => document.querySelector(s), $nav = $('#nav'), $app = $('#app');
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-a]');
+  if (!el || el.disabled || el.type === 'checkbox') return;
+  A[el.dataset.a]?.(el.dataset)
+});
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (el.dataset && el.dataset.a === 'tog') return A.tog(el.dataset);
+  if (el.id === 'file') {
+    const f = el.files[0];
+    if (!f) return;
+    if (!/^image\/(jpeg|png)$/.test(f.type) || f.size > 10 * 1024 * 1024) {
+      S.err = 'Invalid file. Please choose a JPG or PNG up to 10 MB.';
+      return render()
+    }
+    S.err = null;
+    S.file = f;
+    S.det = null;
+    S.imgUrl = URL.createObjectURL(f);
+    render()
+  }
+});
+document.addEventListener('input', e => {
+  if (e.target.id === 'psearch') $('#plist').innerHTML = V.plist(e.target.value)
+});
+restore();
+render();
+</script>
+</body>
+</html>
